@@ -12,7 +12,7 @@ import {
 
 function ProfileSidebar(props) {
   return (
-    <Box>
+    <Box as="aside">
       <img 
         src={`https://github.com/${props.user}.png`} 
         alt="Foto do perfil" 
@@ -32,13 +32,14 @@ function ProfileSidebar(props) {
 
 export default function Home() {
   const user = 'luiizsilverio'
-  const fav = ['juunegreiros', 'omariosouto', 'peas', 'rafaballerini', 'felipefialho']
+  const fav = ['juunegreiros', 'omariosouto', 'peas', 'rafaballerini', 'guilhermesilveira']
   const [communities, setCommunities] = useState([])
 
   function handleCreateCommunity(event) {
     event.preventDefault()
 
     const community = {
+      id: new Date().toISOString(),
       title: event.target.title.value,
       image: event.target.image.value
     }
@@ -91,8 +92,8 @@ export default function Home() {
             <ul>
             {
               communities.map(item => (
-                <li>
-                  <a href={`/users/${ item.title }`} key={ item.title }>
+                <li key={ item.id }>
+                  <a href={`/users/${ item.title }`} >
                     <img src={ item.image 
                       ? item.image 
                       : `https://via.placeholder.com/300x300` } 
@@ -113,8 +114,8 @@ export default function Home() {
             <ul>
             {
               fav.map(person => (
-                <li>
-                  <a href={`/users/${ person }`} key={ person }>
+                <li key={ person }>
+                  <a href={`/users/${ person }`} >
                     <img src={`https://github.com/${ person }.png`} />
                     <span>{ person }</span>
                   </a>
