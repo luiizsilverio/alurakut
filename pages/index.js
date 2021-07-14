@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Main } from '../src/components/Main'
 import { Box } from '../src/components/Box'
 import { ProfileFriendsWrapper } from '../src/components/ProfileFriends'
@@ -30,10 +30,49 @@ function ProfileSidebar(props) {
   )
 }
 
+function ProfilesBox(props) {
+  
+  return (
+    <ProfileFriendsWrapper>
+      <h2 className="smallTitle">
+        { props.title } ({props.items.length})
+      </h2>
+      <ul>
+      {
+        props.items.map(item => (
+          <li key={ item.id }>
+            <a href={`/users/${ item.login }`} >
+              <img src={ item.avatar_url 
+                ? item.avatar_url 
+                : `https://via.placeholder.com/300x300` } 
+                width={300}
+              />
+              <span>{ item.login }</span>
+            </a>
+          </li>
+        ))
+      }
+      </ul>
+    </ProfileFriendsWrapper>  
+  )
+}
+
 export default function Home() {
   const user = 'luiizsilverio'
   const fav = ['juunegreiros', 'omariosouto', 'peas', 'rafaballerini', 'guilhermesilveira']
   const [communities, setCommunities] = useState([])
+  const [seguidores, setSeguidores] = useState([])
+
+  useEffect(() => {
+    function fetchSeguidores() {
+      fetch(`https://api.github.com/users/${user}/followers`)
+        .then(data => data.json())
+        .then(data => setSeguidores(data))
+        .catch(err => alert(`Erro na requisição (${err.message})`))
+    }
+
+    fetchSeguidores()
+  }, [])
 
   function handleCreateCommunity(event) {
     event.preventDefault()
@@ -85,6 +124,12 @@ export default function Home() {
         </div>
 
         <div className="communityArea" style={{ gridArea: 'communityArea'}}>
+     
+          <ProfilesBox 
+            title="Seguidores"
+            items={ seguidores }
+          />
+     
           <ProfileFriendsWrapper>
             <h2 className="smallTitle">
               Minhas comunidades ({communities.length})
