@@ -58,32 +58,74 @@ function ProfilesBox(props) {
 }
 
 export default function Home() {
-  const user = 'luiizsilverio'
+  const myUser = 'luiizsilverio'
   const fav = ['juunegreiros', 'omariosouto', 'peas', 'rafaballerini', 'guilhermesilveira']
   const [communities, setCommunities] = useState([])
   const [seguidores, setSeguidores] = useState([])
 
   useEffect(() => {
     function fetchSeguidores() {
-      fetch(`https://api.github.com/users/${user}/followers`)
-        .then(data => data.json())
-        .then(data => setSeguidores(data))
-        .catch(err => alert(`Erro na requisição (${err.message})`))
+      fetch(`https://api.github.com/users/${myUser}/followers`)
+      .then(data => data.json())
+      .then(data => setSeguidores(data))
+      .catch(err => alert(`Erro na requisição (${err.message})`))
+    }
+    
+    fetchSeguidores()
+  }, [])
+  
+  useEffect(() => {
+    // API GraphQL
+    function fetchCommunities() {
+      fetch(`https://graphql.datocms.com/`, {
+        method: 'POST',
+        headers: {
+          'Authorization': '76a4ffbea45eb98a11e30f0635628c',
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify({ 
+          "query": `query {
+            allCommunities {
+              title
+              id
+              imageUrl
+              creatorSlug
+            }
+          }`
+        })        
+      })
+      .then((response) => response.json())
+      .then(response => 
+        setCommunities(response.data.allCommunities))
     }
 
-    fetchSeguidores()
+    fetchCommunities()
   }, [])
 
   function handleCreateCommunity(event) {
     event.preventDefault()
 
     const community = {
-      id: new Date().toISOString(),
       title: event.target.title.value,
-      image: event.target.image.value
+      imageUrl: event.target.image.value,
+      creatorSlug: myUser
     }
-
-    setCommunities(oldState => [...oldState, community])
+   
+    fetch('/api/communities', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(community)
+    })
+    .then(async (response) => {
+      const dados = await response.json()
+      const newCommunity = dados.data
+      const newCommunities = [...communities, newCommunity]
+      
+      setCommunities(newCommunities)
+    })
   }
 
   return (
@@ -91,7 +133,7 @@ export default function Home() {
       <AlurakutMenu />
       <Main>
         <div className="profileArea" style={{ gridArea: 'profileArea'}}>
-          <ProfileSidebar user={user} />
+          <ProfileSidebar user={myUser} />
         </div>
 
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea'}}>
@@ -138,9 +180,9 @@ export default function Home() {
             {
               communities.map(item => (
                 <li key={ item.id }>
-                  <a href={`/users/${ item.title }`} >
-                    <img src={ item.image 
-                      ? item.image 
+                  <a href={`/communities/${ item.id }`} >
+                    <img src={ item.imageUrl
+                      ? item.imageUrl
                       : `https://via.placeholder.com/300x300` } 
                       width={300}
                     />
