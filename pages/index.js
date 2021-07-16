@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import nookies from 'nookies'
+import jwt from 'jsonwebtoken'
+
 import { Main } from '../src/components/Main'
 import { Box } from '../src/components/Box'
 import { ProfileFriendsWrapper } from '../src/components/ProfileFriends'
@@ -57,15 +60,14 @@ function ProfilesBox(props) {
   )
 }
 
-export default function Home() {
-  const myUser = 'luiizsilverio'
+export default function Home(props) {
   const fav = ['juunegreiros', 'omariosouto', 'peas', 'rafaballerini', 'guilhermesilveira']
   const [communities, setCommunities] = useState([])
   const [seguidores, setSeguidores] = useState([])
 
   useEffect(() => {
     function fetchSeguidores() {
-      fetch(`https://api.github.com/users/${myUser}/followers`)
+      fetch(`https://api.github.com/users/${props.githubUser  }/followers`)
       .then(data => data.json())
       .then(data => setSeguidores(data))
       .catch(err => alert(`Erro na requisição (${err.message})`))
@@ -109,7 +111,7 @@ export default function Home() {
     const community = {
       title: event.target.title.value,
       imageUrl: event.target.image.value,
-      creatorSlug: myUser
+      creatorSlug: props.githubUser
     }
    
     fetch('/api/communities', {
@@ -133,7 +135,7 @@ export default function Home() {
       <AlurakutMenu />
       <Main>
         <div className="profileArea" style={{ gridArea: 'profileArea'}}>
-          <ProfileSidebar user={myUser} />
+          <ProfileSidebar user={ props.githubUser } />
         </div>
 
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea'}}>
@@ -216,3 +218,27 @@ export default function Home() {
     </>
   )
 }
+
+export async function getServerSideProps(context) {
+  const cookies = nookies.get(context)
+  const token = cookies['alurakut@user_token']
+  
+  const user = token ? jwt.decode(token) : ''
+  
+  if (!user) 
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      }
+    }  
+
+  return {
+    props: {
+      githubUser: user.githubUser
+    }
+  }
+}
+
+fazer botão de Logout
+limitar número de comunidades
