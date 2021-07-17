@@ -21,7 +21,7 @@ Desenvolvida durante a Imersão React 03, da Alura.
 * <ins>JsonWebToken</ins>, para decodificar o token JWT
 
 ## :camera_flash: Screenshots
-![](https://github.com/luiizsilverio/podcastr/blob/main/public/alurakut.gif)
+![](https://github.com/luiizsilverio/alurakut/blob/main/public/alurakut.gif)
 
 
 ## :car: Iniciando o projeto
