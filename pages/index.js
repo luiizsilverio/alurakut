@@ -239,6 +239,3 @@ export async function getServerSideProps(context) {
     }
   }
 }
-
-fazer botão de Logout
-limitar número de comunidades

@@ -2,11 +2,14 @@ import styled from 'styled-components';
 import { Box } from '../Box';
 
 export const ProfileFriendsWrapper = styled(Box)`
+  overflow-y: auto;
+  overflow-x: hidden;
+
   ul {
     display: grid;
     grid-gap: 8px;
     grid-template-columns: 1fr 1fr 1fr; 
-    max-height: 220px;
+    max-height: 212px;
     list-style: none;
   }
   img {

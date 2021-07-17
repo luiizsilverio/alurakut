@@ -1,10 +1,11 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import NextLink from 'next/link';
+import nookies from 'nookies'
+import { useRouter } from 'next/router';
 
 const BASE_URL = 'http://alurakut.vercel.app/';
 const v = '1';
-
 
 function Link({ href, children, ...props }) {
   return (
@@ -16,11 +17,20 @@ function Link({ href, children, ...props }) {
   )
 }
 
+
 // ================================================================================================================
 // Menu
 // ================================================================================================================
 export function AlurakutMenu({ githubUser }) {
   const [isMenuOpen, setMenuState] = React.useState(false);
+
+  const router = useRouter()
+
+  function logout() {
+    nookies.destroy(null, 'alurakut@user_token')
+    router.push('/')
+  }
+  
   return (
     <AlurakutMenu.Wrapper isMenuOpen={isMenuOpen}>
       <div className="container">
@@ -34,8 +44,9 @@ export function AlurakutMenu({ githubUser }) {
           ))}
         </nav>
 
-        <nav>
-          <a href={`/logout`}>
+        <nav>          
+          {/* <a href={`/logout`}> */}
+          <a href="#" onClick={logout}>
             Sair
           </a>
           <div>
@@ -190,6 +201,13 @@ function AlurakutMenuProfileSidebar({ githubUser }) {
 // AlurakutProfileSidebarMenuDefault
 // ================================================================================================================
 export function AlurakutProfileSidebarMenuDefault() {
+  const router = useRouter()
+  
+  function logout() {
+    nookies.destroy(null, 'alurakut@user_token')
+    router.push('/')
+  }
+  
   return (
     <AlurakutProfileSidebarMenuDefault.Wrapper>
       <nav>
@@ -216,7 +234,8 @@ export function AlurakutProfileSidebarMenuDefault() {
           <img src={`${BASE_URL}/icons/plus.svg`} />
             GitHub Trends
           </a>
-        <a href="/logout">
+        {/* <a href="/logout"> */}
+        <a href="#" onClick={logout}>
           <img src={`${BASE_URL}//icons/logout.svg`} />
             Sair
           </a>
