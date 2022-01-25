@@ -8,9 +8,9 @@
 * [Contato](#email-contato)
 
 ## Sobre o projeto
-Aplicação desenvolvida em React / Next (NLW 06 da Rocketseat), com Styled-Components, que emula a tela do antigo Orkut.<br />
+Aplicação desenvolvida em React / Next, durante a Imersão React 03, da Alura. <br />
+Emula a tela do antigo Orkut, utilizando Styled-Components.<br />
 Busca os seguidores do Github e permite criar novas comunidades, que são armazenadas nos cookies.<br />
-Desenvolvida durante a Imersão React 03, da Alura.
  
 ## :hammer_and_wrench: Tecnologias
 * <ins>ReactJs</ins>
